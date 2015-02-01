@@ -10,13 +10,59 @@ package mybank;
  * @author Akash
  */
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 public class BankOperations {
 
     int currentAccount = 101;
 
-    public void deposit() {
+    public void deposit(String accountNo, double amount) throws Exception {
+        File searchFile = new File(accountNo);
+        FileWriter fw = new FileWriter(accountNo + "temp", true);
+        if (searchFile.exists()) {
+            Scanner deposit = new Scanner(searchFile);
+            System.out.println("file found");
+            while (deposit.hasNextLine()) {
+
+                System.out.println("inside while");
+                String line = deposit.nextLine();
+                System.out.println(line);
+
+                if (line.contains("Amount")) {
+                    double currAmount = (Double.parseDouble(line.substring(line.indexOf(" ") + 1, line.length())));
+                    System.out.println(currAmount);
+                    double updatedAmount = currAmount + amount;
+                    System.out.println(updatedAmount);
+                    System.out.println(String.valueOf(currAmount));
+                    System.out.println(String.valueOf(updatedAmount));
+                    fw.write(line.replaceAll(String.valueOf(currAmount), String.valueOf(updatedAmount)) + "\n");
+
+                } else {
+                    fw.write(line + "\n");
+                }
+
+            }
+
+        }
+        fw.flush();
+        fw.close();
+        File f = new File(accountNo);
+        
+        try{      
+            if(f.delete()){
+            System.out.println("Delet success");
+            
+        }
+        
+        else{
+               System.out.println("operation failed");
+                }
+        }
+        catch(Exception e){
+        e.printStackTrace();
+        }
+        new File(accountNo + "temp").renameTo(searchFile);
 
     }
 
@@ -42,7 +88,7 @@ public class BankOperations {
                 int accountNo = currentAccount;
                 accountopener.account(inputName, inputPassword, currentAccount, amount);
                 currentAccount++;
-                System.out.println("New account opened,Your account no is "+accountNo);
+                System.out.println("New account opened,Your account no is " + accountNo);
                 System.out.println();
                 menu();
             case 2:
@@ -59,7 +105,6 @@ public class BankOperations {
                     System.out.println();
                     menu();
                 }
-                
 
         }
     }
@@ -79,24 +124,19 @@ public class BankOperations {
         System.out.println("0: Logout");
         System.out.println("---------------------------");
         System.out.println();
-        /*Scanner scan = new Scanner(System.in);
-         try {
-         int input = Integer.parseInt(scan.next());
-         switch (input) {
-         case 1:
-         System.out.println("Enter your name");
-         String inputName = scan.next().toUpperCase();
-         System.out.println("Enter amount to be deposited");
-         int inputAmount = Integer.parseInt(scan.next());
-         openAccount(inputName, inputAmount);
-         menu();
-         case 2:
-         System.out.println("Enter your account No");
-         int inputAccountNo = Integer.parseInt(scan.next());
-         System.out.println("Enter amount to be deposited");
-         inputAmount = Integer.parseInt(scan.next());
-         deposit(inputAccountNo, inputAmount);
-         menu();
+        Scanner scan = new Scanner(System.in);
+        try {
+            int input = Integer.parseInt(scan.next());
+            switch (input) {
+                case 1:
+                    System.out.println("Enter your account No");
+                    String inputAccountNo = scan.next();
+                    System.out.println("Enter amount to be deposited");
+                    int inputAmount = Integer.parseInt(scan.next());
+                    deposit(inputAccountNo, inputAmount);
+                    menu();
+            }
+        } /*
          case 3:
          System.out.println("Enter your account No");
          inputAccountNo = Integer.parseInt(scan.next());
@@ -132,10 +172,10 @@ public class BankOperations {
          menu();
 
          }
-         } catch (Exception e) {
-         System.out.println("Invalid input.Try Again");
-         menu();
-         }
-         }*/
+         } */ catch (Exception e) {
+            System.out.println("Invalid input.Try Again");
+            mainMenu();
+        }
+
     }
 }
