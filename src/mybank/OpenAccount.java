@@ -16,8 +16,9 @@ public class OpenAccount {
       FileWriter passwordHandler = new FileWriter("password.txt",true);
       passwordHandler.write(inputName+" "+inputPassword+"\n");
       FileWriter accountOpener = new FileWriter(String.valueOf(accountNo),true);
-      accountOpener.write("accountNO "+accountNo+"\n");
-      accountOpener.write("amount "+amount+"\n");
+      accountOpener.write("Name "+inputName+"\n");
+      accountOpener.write("AccountNo "+accountNo+"\n");
+      accountOpener.write("Amount "+amount+"\n");
       passwordHandler.flush();
       accountOpener.flush();
       passwordHandler.close();

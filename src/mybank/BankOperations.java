@@ -41,6 +41,7 @@ public class BankOperations {
                 double amount = Double.parseDouble(br.readLine());
                 int accountNo = currentAccount;
                 accountopener.account(inputName, inputPassword, currentAccount, amount);
+                currentAccount++;
                 System.out.println("New account opened,Your account no is "+accountNo);
                 System.out.println();
                 menu();
