@@ -6,6 +6,7 @@
 package mybank;
 
 /**
+ * 
  *
  * @author Akash
  */
@@ -14,5 +15,4 @@ public class BankMain {
         BankOperations BO = new BankOperations();
         BO.menu();
     }
-    
 }

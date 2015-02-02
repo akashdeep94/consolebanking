@@ -15,54 +15,40 @@ import java.util.Scanner;
 
 public class BankOperations {
 
-    int currentAccount = 101;
+    
 
     public void deposit(String accountNo, double amount) throws Exception {
-        File searchFile = new File(accountNo);
-        FileWriter fw = new FileWriter(accountNo + "temp", true);
+        File searchFile = new File(accountNo+".txt");
+        FileWriter fw = new FileWriter(accountNo + "temp.txt", true);
         if (searchFile.exists()) {
             Scanner deposit = new Scanner(searchFile);
-            System.out.println("file found");
-            while (deposit.hasNextLine()) {
-
-                System.out.println("inside while");
+             while (deposit.hasNextLine()) {
                 String line = deposit.nextLine();
                 System.out.println(line);
-
                 if (line.contains("Amount")) {
                     double currAmount = (Double.parseDouble(line.substring(line.indexOf(" ") + 1, line.length())));
-                    System.out.println(currAmount);
                     double updatedAmount = currAmount + amount;
-                    System.out.println(updatedAmount);
-                    System.out.println(String.valueOf(currAmount));
-                    System.out.println(String.valueOf(updatedAmount));
                     fw.write(line.replaceAll(String.valueOf(currAmount), String.valueOf(updatedAmount)) + "\n");
 
                 } else {
                     fw.write(line + "\n");
                 }
-
             }
-
+           deposit.close();
         }
         fw.flush();
         fw.close();
-        File f = new File(accountNo);
-        
-        try{      
-            if(f.delete()){
-            System.out.println("Delet success");
-            
+         try {
+            if (searchFile.delete()) {
+                System.out.println("Amount credited to your account");
+
+            } else {
+                System.out.println("operation failed,Rolling back your transaction");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        
-        else{
-               System.out.println("operation failed");
-                }
-        }
-        catch(Exception e){
-        e.printStackTrace();
-        }
-        new File(accountNo + "temp").renameTo(searchFile);
+        new File(accountNo + "temp.txt").renameTo(searchFile);
 
     }
 
@@ -74,6 +60,7 @@ public class BankOperations {
         System.out.println("Welcome to axis bank");
         System.out.println("1:Open new account.");
         System.out.println("2:Login");
+        try{
         int choice = (Integer.parseInt(br.readLine()));
 
         switch (choice) {
@@ -85,10 +72,7 @@ public class BankOperations {
                 inputPassword = br.readLine();
                 System.out.print("Enter Initial amount:- ");
                 double amount = Double.parseDouble(br.readLine());
-                int accountNo = currentAccount;
-                accountopener.account(inputName, inputPassword, currentAccount, amount);
-                currentAccount++;
-                System.out.println("New account opened,Your account no is " + accountNo);
+                accountopener.account(inputName, inputPassword, amount);
                 System.out.println();
                 menu();
             case 2:
@@ -107,6 +91,12 @@ public class BankOperations {
                 }
 
         }
+        }
+        catch(Exception e){
+            System.out.println("Invalid Input.Try Again");
+            menu();
+        }
+        
     }
 
     public void mainMenu() {
